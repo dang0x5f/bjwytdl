@@ -1,7 +1,10 @@
+import java.awt.BorderLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+
 import javax.swing.JRootPane;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
-import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -14,15 +17,21 @@ public class Main
     public static void main(String[] args)
     {
         // west panel
-        JPanel global_option_panel = new JPanel();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.NORTH;
+        JPanel global_option_panel = new JPanel(new GridBagLayout());
 
+        gbc.gridx = 0;
+        gbc.gridy = 0;
         String g_opt_playlist[] = { "playlist", "no playlist" };
         JList<String> playlist_listbox = new JList<String>(g_opt_playlist);
-        global_option_panel.add(playlist_listbox);
+        global_option_panel.add(playlist_listbox, gbc);
 
+        gbc.gridy = 1;
         String g_opt_thumbnail[] = { "thumbnail", "no thumbnail" };
         JList<String> thumbnail_listbox = new JList<String>(g_opt_thumbnail);
-        global_option_panel.add(thumbnail_listbox);
+        global_option_panel.add(thumbnail_listbox, gbc);
 
         // audio options
         JPanel audio_panel = new JPanel();
