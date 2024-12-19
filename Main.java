@@ -1,6 +1,8 @@
+import java.awt.Component;
 import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
+import javax.swing.BoxLayout;
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
 
 import javax.swing.JRootPane;
 import javax.swing.JFrame;
@@ -16,22 +18,42 @@ public class Main
 {
     public static void main(String[] args)
     {
-        // west panel
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.anchor = GridBagConstraints.NORTH;
-        JPanel global_option_panel = new JPanel(new GridBagLayout());
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        String g_opt_playlist[] = { "playlist", "no playlist" };
+        Border etched_border = BorderFactory.createEtchedBorder();
+
+        JPanel global_option_panel = new JPanel();
+        global_option_panel.setLayout(new BoxLayout(global_option_panel,BoxLayout.Y_AXIS));
+
+
+        JPanel playlist_pan = new JPanel();
+        playlist_pan.setLayout(new BoxLayout(playlist_pan,BoxLayout.Y_AXIS));
+        playlist_pan.setBorder(etched_border);
+
+        JLabel playlist_lbl = new JLabel("playlist");
+        playlist_lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+        String g_opt_playlist[] = { "include", "exclude" };
         JList<String> playlist_listbox = new JList<String>(g_opt_playlist);
-        global_option_panel.add(playlist_listbox, gbc);
+        playlist_pan.add(playlist_lbl);
+        playlist_pan.add(playlist_listbox);
 
-        gbc.gridy = 1;
-        String g_opt_thumbnail[] = { "thumbnail", "no thumbnail" };
+
+        JPanel thumbnail_pan = new JPanel();
+        thumbnail_pan.setLayout(new BoxLayout(thumbnail_pan,BoxLayout.Y_AXIS));
+        thumbnail_pan.setBorder(etched_border);
+
+        JLabel thumbnail_lbl = new JLabel("thumbnail");
+        thumbnail_lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+        String g_opt_thumbnail[] = { "include", "exclude" };
         JList<String> thumbnail_listbox = new JList<String>(g_opt_thumbnail);
-        global_option_panel.add(thumbnail_listbox, gbc);
+        thumbnail_pan.add(thumbnail_lbl);
+        thumbnail_pan.add(thumbnail_listbox);
+
+
+        global_option_panel.add(playlist_pan);
+        global_option_panel.add(thumbnail_pan);
+
+
+
 
         // audio options
         JPanel audio_panel = new JPanel();
@@ -39,13 +61,17 @@ public class Main
         JList<String> list_box = new JList<String>(audio_formats);
         audio_panel.add(list_box);
 
+
+        JPanel video_panel = new JPanel();
+
+
+
         // meun bar 
         JMenuBar menu_bar = new JMenuBar();
         JMenu menu_file = new JMenu("File");
         JMenu menu_edit = new JMenu("Edit");
         JMenu menu_view = new JMenu("View");
         JMenu menu_about = new JMenu("About");
-
         // add to bar
         menu_bar.add(menu_file);
         menu_bar.add(menu_edit);
@@ -55,7 +81,7 @@ public class Main
         // tab_pane + add to pane
         JTabbedPane tab_pane = new JTabbedPane();
         tab_pane.addTab("audio",audio_panel);
-        tab_pane.addTab("video",null);
+        tab_pane.addTab("video",video_panel);
 
         // frame
         JFrame frame = new JFrame();
