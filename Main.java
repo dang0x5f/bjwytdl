@@ -1,5 +1,6 @@
 import java.awt.Component;
 import java.awt.BorderLayout;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
@@ -24,29 +25,28 @@ public class Main
         JPanel global_option_panel = new JPanel();
         global_option_panel.setLayout(new BoxLayout(global_option_panel,BoxLayout.Y_AXIS));
 
-
         JPanel playlist_pan = new JPanel();
+        // playlist_pan.setToolTipText("is this a playlist?");
         playlist_pan.setLayout(new BoxLayout(playlist_pan,BoxLayout.Y_AXIS));
         playlist_pan.setBorder(etched_border);
-
         JLabel playlist_lbl = new JLabel("playlist");
         playlist_lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
         String g_opt_playlist[] = { "include", "exclude" };
         JList<String> playlist_listbox = new JList<String>(g_opt_playlist);
         playlist_pan.add(playlist_lbl);
         playlist_pan.add(playlist_listbox);
-
+        playlist_pan.add(Box.createHorizontalGlue());
 
         JPanel thumbnail_pan = new JPanel();
         thumbnail_pan.setLayout(new BoxLayout(thumbnail_pan,BoxLayout.Y_AXIS));
         thumbnail_pan.setBorder(etched_border);
-
         JLabel thumbnail_lbl = new JLabel("thumbnail");
         thumbnail_lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
         String g_opt_thumbnail[] = { "include", "exclude" };
         JList<String> thumbnail_listbox = new JList<String>(g_opt_thumbnail);
         thumbnail_pan.add(thumbnail_lbl);
         thumbnail_pan.add(thumbnail_listbox);
+        thumbnail_pan.add(Box.createHorizontalGlue());
 
 
         global_option_panel.add(playlist_pan);
