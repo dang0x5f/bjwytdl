@@ -16,9 +16,13 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
 import javax.swing.JRootPane;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JProgressBar;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenuBar;
@@ -84,11 +88,29 @@ public class Main
 
 
         // audio options
-        JPanel audio_panel = new JPanel();
         // audio_panel.setBackground(Color.YELLOW);
+
+        JPanel audio_downloads = new JPanel(new GridLayout());
+        audio_downloads.setBackground(Color.ORANGE);
+        JProgressBar pgb1 = new JProgressBar();
+        pgb1.setMaximum(100);
+        pgb1.setValue(25);
+
+
         String audio_formats[] = { "aac", "alac", "flac", "m4a", "mp3", "opus", "vorbis", "wav" };
         JList<String> list_box = new JList<String>(audio_formats);
-        audio_panel.add(list_box);
+        // JScrollPane scroll_pane = new JScrollPane(list_box);
+
+        JPanel audio_options = new JPanel();
+        audio_options.add(list_box);
+        // audio_panel.add(scroll_pane);
+        // audio_panel.add(url_textfield);
+
+        JSplitPane audio_panel = new JSplitPane(JSplitPane.VERTICAL_SPLIT,audio_options,audio_downloads);
+
+
+
+
 
         JPanel video_panel = new JPanel();
 
@@ -114,7 +136,7 @@ public class Main
         // frame
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setSize(400,300);
+        frame.setSize(512,380);
 
         // add to frame
         frame.setJMenuBar(menu_bar);
