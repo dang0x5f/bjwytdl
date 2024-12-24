@@ -9,6 +9,11 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.FlowLayout;
 
+import java.io.InputStream;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.BorderFactory;
@@ -132,6 +137,25 @@ public class Main
         JLabel format_label = new JLabel("format");
 
         JButton dl_button = new JButton("download");
+        dl_button.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae){
+                try{
+                    Process proc = Runtime.getRuntime().exec("ls");
+                    InputStream input_stream = proc.getInputStream();
+
+                    int c;
+                    while((c=input_stream.read()) != -1){
+                        System.out.print((char)c);
+                    }
+
+                    proc.waitFor();
+                }
+                catch(Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+        });
 
         JTextField url_textfield = new JTextField(50);
 
