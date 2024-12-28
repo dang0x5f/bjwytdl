@@ -13,6 +13,7 @@ import java.io.InputStream;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.SwingWorker;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -138,41 +139,38 @@ public class Main
         JTextField url_textfield = new JTextField(50);
 
         JButton dl_button = new JButton("download");
-        dl_button.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent ae){
-                try{
-                    // new Thread( ()->{
-                    //     try{
-                    //         Process proc = Runtime.getRuntime().exec("yt-dlp -x --audio-format \"mp3\" " + url_textfield.getText() );
-                    //         InputStream input_stream = proc.getInputStream();
+        dl_button.addActionListener(e -> {
+                
+            SwingWorker worker_thread = new SwingWorker<Integer,Void>() {
+                @Override
+                public Integer doInBackground(){
+                    
+                    try{
 
-                    //         int c;
-                    //         while((c=input_stream.read()) != -1){
-                    //             System.out.print((char)c);
-                    //         }
+                        Process proc = 
+                            Runtime.getRuntime().exec("yt-dlp --no-simulate --print {\"title\":\"%(title)s\"} --progress-template \"%(progress._percent_str)s\" -x --audio-format mp3 --audio-quality 0 " 
+                                    + url_textfield.getText() );
 
-                    //         proc.waitFor();
-                    //     }
-                    //     catch(Exception ex){
-                    //         ex.printStackTrace();
-                    //     }
-                    // });
-                    Process proc = Runtime.getRuntime().exec("yt-dlp " + url_textfield.getText() );
-                    // Process proc = Runtime.getRuntime().exec("ls" + " -l");
-                    InputStream input_stream = proc.getInputStream();
+                        url_textfield.setText("");
+                        InputStream input_stream = proc.getInputStream();
 
-                    int c;
-                    while((c=input_stream.read()) != -1){
-                        System.out.print((char)c);
+                        int c;
+                        while((c=input_stream.read()) != -1){
+                            System.out.print((char)c);
+                        }
+
+                        proc.waitFor();    
+                    }
+                    catch(Exception ex){
+                        ex.printStackTrace();
                     }
 
-                    proc.waitFor();
+                    return(0);
                 }
-                catch(Exception ex){
-                    ex.printStackTrace();
-                }
-            }
+
+            };
+            worker_thread.execute();
+
         });
 
 
