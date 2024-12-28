@@ -135,13 +135,31 @@ public class Main
         // JScrollPane scroll_pane = new JScrollPane(list_box);
         
         JLabel format_label = new JLabel("format");
+        JTextField url_textfield = new JTextField(50);
 
         JButton dl_button = new JButton("download");
         dl_button.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae){
                 try{
-                    Process proc = Runtime.getRuntime().exec("ls");
+                    // new Thread( ()->{
+                    //     try{
+                    //         Process proc = Runtime.getRuntime().exec("yt-dlp -x --audio-format \"mp3\" " + url_textfield.getText() );
+                    //         InputStream input_stream = proc.getInputStream();
+
+                    //         int c;
+                    //         while((c=input_stream.read()) != -1){
+                    //             System.out.print((char)c);
+                    //         }
+
+                    //         proc.waitFor();
+                    //     }
+                    //     catch(Exception ex){
+                    //         ex.printStackTrace();
+                    //     }
+                    // });
+                    Process proc = Runtime.getRuntime().exec("yt-dlp " + url_textfield.getText() );
+                    // Process proc = Runtime.getRuntime().exec("ls" + " -l");
                     InputStream input_stream = proc.getInputStream();
 
                     int c;
@@ -157,7 +175,6 @@ public class Main
             }
         });
 
-        JTextField url_textfield = new JTextField(50);
 
         JPanel audio_options = new JPanel(new GridBagLayout());
         GridBagConstraints gbc2 = new GridBagConstraints();
