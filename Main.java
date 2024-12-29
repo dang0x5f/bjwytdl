@@ -10,6 +10,7 @@ import java.awt.GridBagConstraints;
 import java.awt.FlowLayout;
 
 import java.io.InputStream;
+import java.io.BufferedReader;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -110,15 +111,19 @@ public class Main
         pgb1.setMaximum(100);
         pgb1.setValue(25);
 
-        Object[][] data = new Object[2][3];
-        data[0][0] = "anoseuhnaou";
-        data[0][1] = "75";
-        data[0][2] = "1:24";
-        data[1][0] = "jbvwkjmbjvk";
-        data[1][1] = "39";
-        data[1][2] = "0:35";
+        
+        // JList<DownloadEntry> data = new JList<DownloadEntry>();
+        Object[][] data = new Object[2][4];
+        data[0][0] = "20572";
+        data[0][1] = "songTitle1";
+        data[0][2] = "32.5%";
+        data[0][3] = "mp3";
+        data[1][0] = "70420";
+        data[1][1] = "songTitle2";
+        data[1][2] = "100.0%";
+        data[1][3] = "mp3";
 
-        String[] dl_colheadings = { "name", "progress", "time" };
+        String[] dl_colheadings = { "pid", "title", "progress", "format" };
 
         JTable dl_table = new JTable(data,dl_colheadings);
         TableColumnModel tcm = dl_table.getColumnModel();
@@ -147,16 +152,32 @@ public class Main
                     
                     try{
 
+                        // --newline --progress-template %(progress._percent_str)s%(info.title)s
                         Process proc = 
-                            Runtime.getRuntime().exec("yt-dlp --no-simulate --print {\"title\":\"%(title)s\"} --progress-template \"%(progress._percent_str)s\" -x --audio-format mp3 --audio-quality 0 " 
+                            Runtime.getRuntime().exec("yt-dlp --newline --progress-template >%(progress._percent_str)s%(info.title)s -x --audio-format mp3 --audio-quality 0 " 
                                     + url_textfield.getText() );
 
                         url_textfield.setText("");
                         InputStream input_stream = proc.getInputStream();
 
-                        int c;
+                        char line[] = new char[256];
+                        int c, x=0, round=0;
                         while((c=input_stream.read()) != -1){
-                            System.out.print((char)c);
+                            if((char)c != '\n'){
+                                line[x++] = (char)c;
+                                // System.out.print((char)c);
+                            }else{
+                                System.out.println(line);
+                                if(round == 0){
+
+                                }
+                                
+
+                                for(int i = 0; i < line.length; i++)
+                                    line[i] = '\0';
+                                x = 0;
+                                round++;
+                            }
                         }
 
                         proc.waitFor();    
