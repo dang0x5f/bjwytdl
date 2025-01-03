@@ -1,4 +1,6 @@
 // https://stackoverflow.com/questions/13753562/adding-progress-bar-to-each-table-cell-for-file-progress-java
+//
+import java.util.Vector;
 
 import java.awt.Color;
 import java.awt.Insets;
@@ -28,6 +30,8 @@ import javax.swing.JRootPane;
 import javax.swing.JTable;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableColumn;
+
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -47,6 +51,9 @@ import javax.swing.SwingConstants;
 
 public class Main 
 {
+    public static JTable table;
+    public static DefaultTableModel table_model;
+
     public static void main(String[] args)
     {
 
@@ -113,25 +120,26 @@ public class Main
 
         
         // JList<DownloadEntry> data = new JList<DownloadEntry>();
-        Object[][] data = new Object[2][4];
-        data[0][0] = "20572";
-        data[0][1] = "songTitle1";
-        data[0][2] = "32.5%";
-        data[0][3] = "mp3";
-        data[1][0] = "70420";
-        data[1][1] = "songTitle2";
-        data[1][2] = "100.0%";
-        data[1][3] = "mp3";
+        // Object[][] data = new Object[2][4];
+        // data[0][0] = "20572";
+        // data[0][1] = "songTitle1";
+        // data[0][2] = "32.5%";
+        // data[0][3] = "mp3";
+        // data[1][0] = "70420";
+        // data[1][1] = "songTitle2";
+        // data[1][2] = "100.0%";
+        // data[1][3] = "mp3";
+        // String[] dl_colheadings = { "pid", "title", "progress", "format" };
+        
+        table_model = new DefaultTableModel();
+        table_model.addColumn("col 1");
+        table_model.addColumn("col 2");
+        table_model.addColumn("progress");
+        table = new JTable(table_model);
+        table.getColumnModel().getColumn(2).setCellRenderer(new ProgressCellRender());
+        table.setShowGrid(true);
 
-        String[] dl_colheadings = { "pid", "title", "progress", "format" };
-
-        JTable dl_table = new JTable(data,dl_colheadings);
-        TableColumnModel tcm = dl_table.getColumnModel();
-        TableColumn prog_col = tcm.getColumn(1);
-        prog_col.setCellRenderer(new ProgressCellRender());
-
-        JScrollPane dl_scrollpane = new JScrollPane(dl_table);
-
+        JScrollPane dl_scrollpane = new JScrollPane(table);
         audio_downloads.add(dl_scrollpane);
 
 
@@ -160,24 +168,28 @@ public class Main
                         url_textfield.setText("");
                         InputStream input_stream = proc.getInputStream();
 
+                        int rowcount = 0;
                         char line[] = new char[256];
                         int c, x=0, round=0;
                         while((c=input_stream.read()) != -1){
-                            if((char)c != '\n'){
-                                line[x++] = (char)c;
-                                // System.out.print((char)c);
-                            }else{
-                                System.out.println(line);
-                                if(round == 0){
+                            if((char)c == '>'){
+                                while((char)(c=input_stream.read()) != '\n')
+                                    line[x++] = (char)c;
+                                // line[x] = '\0';
 
+                                if(round < 1){
+                                    Object[] row = { new String(line).substring(6), "mp3", 0.0 };
+                                    table_model.addRow(row);
+                                    rowcount = table_model.getRowCount();
+                                    round++;
+                                } else {
+                                    table.setValueAt((int)Float.parseFloat(new String(line).substring(0,5)),rowcount-1,2);
                                 }
-                                
-
-                                for(int i = 0; i < line.length; i++)
-                                    line[i] = '\0';
-                                x = 0;
-                                round++;
                             }
+
+                            for(int i = 0; i < line.length; i++)
+                                line[i] = '\0';
+                            x = 0;
                         }
 
                         proc.waitFor();    
@@ -263,16 +275,24 @@ public class Main
 
     public static class ProgressCellRender extends JProgressBar implements TableCellRenderer {
 
+        private JProgressBar bar;
+
+        public ProgressCellRender()
+        {
+            bar = new JProgressBar(0,100);
+            bar.setStringPainted(true);
+        }
+
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             int progress = 0;
             if (value instanceof Float) {
-                progress = Math.round(((Float) value) * 100f);
+                progress = Math.round((Float) value) ;
             } else if (value instanceof Integer) {
                 progress = (int) value;
             }
-            setValue(progress);
-            return this;
+            bar.setValue(progress);
+            return bar;
         }
     }
 
