@@ -1,5 +1,11 @@
+// TODO
+// * cellrender for image icon, needs to be a label, centered
+//   + https://docs.oracle.com/javase/tutorial/uiswing/components/table.html#editrender
+//
 // https://stackoverflow.com/questions/13753562/adding-progress-bar-to-each-table-cell-for-file-progress-java
 //
+import javax.swing.ImageIcon;
+import java.awt.Image;
 import java.util.Vector;
 
 import java.awt.Color;
@@ -131,12 +137,21 @@ public class Main
         // data[1][3] = "mp3";
         // String[] dl_colheadings = { "pid", "title", "progress", "format" };
         
-        table_model = new DefaultTableModel();
-        table_model.addColumn("col 1");
-        table_model.addColumn("col 2");
-        table_model.addColumn("progress");
+        table_model = new DefaultTableModel()
+        {
+            @Override
+            public boolean isCellEditable(int a, int b)
+            {
+                return(false);
+            }
+        };
+        table_model.addColumn("name");
+        table_model.addColumn("format");
+        table_model.addColumn("download status");
+        table_model.addColumn("extraction status");
         table = new JTable(table_model);
         table.getColumnModel().getColumn(2).setCellRenderer(new ProgressCellRender());
+        table.getColumnModel().getColumn(3).setCellRenderer(new AudioExtractCellRender());
         table.setShowGrid(true);
 
         JScrollPane dl_scrollpane = new JScrollPane(table);
@@ -155,6 +170,8 @@ public class Main
         dl_button.addActionListener(e -> {
                 
             SwingWorker worker_thread = new SwingWorker<Integer,Void>() {
+                private int rowcount;
+
                 @Override
                 public Integer doInBackground(){
                     
@@ -168,7 +185,7 @@ public class Main
                         url_textfield.setText("");
                         InputStream input_stream = proc.getInputStream();
 
-                        int rowcount = 0;
+                        rowcount = 0;
                         char line[] = new char[256];
                         int c, x=0, round=0;
                         while((c=input_stream.read()) != -1){
@@ -178,7 +195,7 @@ public class Main
                                 // line[x] = '\0';
 
                                 if(round < 1){
-                                    Object[] row = { new String(line).substring(6), "mp3", 0.0 };
+                                    Object[] row = { new String(line).substring(6), "mp3", 0, 0 };
                                     table_model.addRow(row);
                                     rowcount = table_model.getRowCount();
                                     round++;
@@ -199,6 +216,12 @@ public class Main
                     }
 
                     return(0);
+                }
+
+                @Override
+                public void done(){
+                    table.setValueAt(100,rowcount-1,2);
+                    table.setValueAt(1,rowcount-1,3);
                 }
 
             };
@@ -273,7 +296,8 @@ public class Main
         frame.setVisible(true);
     }
 
-    public static class ProgressCellRender extends JProgressBar implements TableCellRenderer {
+    public static class ProgressCellRender extends JProgressBar implements TableCellRenderer 
+    {
 
         private JProgressBar bar;
 
@@ -286,13 +310,38 @@ public class Main
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             int progress = 0;
-            if (value instanceof Float) {
-                progress = Math.round((Float) value) ;
-            } else if (value instanceof Integer) {
+            // if (value instanceof Float) {
+            //     progress = Math.round((Float) value) ;
+            // } else if (value instanceof Integer) {
                 progress = (int) value;
-            }
+            // }
             bar.setValue(progress);
             return bar;
+        }
+    }
+
+    public static class AudioExtractCellRender extends ImageIcon implements TableCellRenderer
+    {
+        private JLabel label_cell;
+        private final String done       = "done.";
+        private final String extracting = "extracting...";
+
+        public AudioExtractCellRender()
+        {
+            label_cell = new JLabel(extracting);
+
+            label_cell.setHorizontalAlignment(JLabel.CENTER);
+        }
+        
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if((int)value == 0){
+                label_cell.setText(extracting);
+                return label_cell;
+            }
+
+            label_cell.setText(done);
+            return label_cell;
         }
     }
 
