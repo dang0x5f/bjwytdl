@@ -1,9 +1,6 @@
 // TODO
-// * cellrender for image icon, needs to be a label, centered
-//   + https://docs.oracle.com/javase/tutorial/uiswing/components/table.html#editrender
-//
 // https://stackoverflow.com/questions/13753562/adding-progress-bar-to-each-table-cell-for-file-progress-java
-//
+
 import javax.swing.ImageIcon;
 import java.awt.Image;
 import java.util.Vector;
@@ -59,6 +56,9 @@ public class Main
 {
     public static JTable table;
     public static DefaultTableModel table_model;
+    private static final String progress_opt_str = " --newline --progress-template >%(progress._percent_str)s%(info.title)s ";
+    private static final String output_opt_str   = " -o %(title)s.%(ext)s ";
+    private static final String audio_opt_str    = " -x --audio-format ";
 
     public static void main(String[] args)
     {
@@ -87,6 +87,7 @@ public class Main
 
         String g_opt_playlist[] = { "include", "exclude" };
         JList<String> playlist_listbox = new JList<String>(g_opt_playlist);
+        playlist_listbox.setSelectedIndex(1);
         playlist_pan.add(playlist_lbl);
         playlist_pan.add(playlist_listbox);
 
@@ -100,6 +101,7 @@ public class Main
 
         String g_opt_thumbnail[] = { "include", "exclude" };
         JList<String> thumbnail_listbox = new JList<String>(g_opt_thumbnail);
+        thumbnail_listbox.setSelectedIndex(1);
         thumbnail_pan.add(thumbnail_lbl);
         thumbnail_pan.add(thumbnail_listbox);
 
@@ -125,18 +127,6 @@ public class Main
         pgb1.setValue(25);
 
         
-        // JList<DownloadEntry> data = new JList<DownloadEntry>();
-        // Object[][] data = new Object[2][4];
-        // data[0][0] = "20572";
-        // data[0][1] = "songTitle1";
-        // data[0][2] = "32.5%";
-        // data[0][3] = "mp3";
-        // data[1][0] = "70420";
-        // data[1][1] = "songTitle2";
-        // data[1][2] = "100.0%";
-        // data[1][3] = "mp3";
-        // String[] dl_colheadings = { "pid", "title", "progress", "format" };
-        
         table_model = new DefaultTableModel()
         {
             @Override
@@ -147,10 +137,14 @@ public class Main
         };
         table_model.addColumn("name");
         table_model.addColumn("format");
-        table_model.addColumn("download status");
-        table_model.addColumn("extraction status");
+        table_model.addColumn("progress");
+        table_model.addColumn("status");
         table = new JTable(table_model);
+        table.getColumnModel().getColumn(0).setPreferredWidth(100);
+        table.getColumnModel().getColumn(1).setPreferredWidth(30);
+        table.getColumnModel().getColumn(2).setPreferredWidth(100);
         table.getColumnModel().getColumn(2).setCellRenderer(new ProgressCellRender());
+        table.getColumnModel().getColumn(3).setPreferredWidth(100);
         table.getColumnModel().getColumn(3).setCellRenderer(new AudioExtractCellRender());
         table.setShowGrid(true);
 
@@ -160,7 +154,9 @@ public class Main
 
         String audio_formats[] = { "aac", "alac", "flac", "m4a", "mp3", "opus", "vorbis", "wav" };
         // JList<String> list_box = new JList<String>(audio_formats);
+        // list_box.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         JComboBox<String> list_box = new JComboBox<String>(audio_formats);
+        list_box.setSelectedIndex(4);
         // JScrollPane scroll_pane = new JScrollPane(list_box);
         
         JLabel format_label = new JLabel("format");
@@ -177,10 +173,13 @@ public class Main
                     
                     try{
 
-                        // --newline --progress-template %(progress._percent_str)s%(info.title)s
                         Process proc = 
-                            Runtime.getRuntime().exec("yt-dlp --newline --progress-template >%(progress._percent_str)s%(info.title)s -x --audio-format mp3 --audio-quality 0 " 
-                                    + url_textfield.getText() );
+                            Runtime.getRuntime().exec("yt-dlp " + 
+                                                      progress_opt_str + 
+                                                      audio_opt_str + list_box.getSelectedItem() +
+                                                      " --audio-quality 0 " + 
+                                                      output_opt_str +
+                                                      url_textfield.getText() );
 
                         url_textfield.setText("");
                         InputStream input_stream = proc.getInputStream();
@@ -195,7 +194,7 @@ public class Main
                                 // line[x] = '\0';
 
                                 if(round < 1){
-                                    Object[] row = { new String(line).substring(6), "mp3", 0, 0 };
+                                    Object[] row = { new String(line).substring(6), list_box.getSelectedItem(), 0, 0 };
                                     table_model.addRow(row);
                                     rowcount = table_model.getRowCount();
                                     round++;
