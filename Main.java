@@ -1,9 +1,11 @@
 // TODO
 // https://stackoverflow.com/questions/13753562/adding-progress-bar-to-each-table-cell-for-file-progress-java
 
+import java.io.File;
 import javax.swing.ImageIcon;
 import java.awt.Image;
 import java.util.Vector;
+import javax.swing.JFileChooser;
 
 import java.awt.Color;
 import java.awt.Insets;
@@ -251,6 +253,27 @@ public class Main
         gbc2.weightx = 0;
         gbc2.gridwidth = 1;
         audio_options.add(dl_button,gbc2);
+        JLabel download_dir = new JLabel(". . . . . . . . . . .");
+        gbc2.gridx = 0;
+        gbc2.gridy = 2;
+        gbc2.weightx = 1;
+        gbc2.gridwidth = 4;
+        audio_options.add(download_dir,gbc2);
+        JFileChooser dir_chooser = new JFileChooser();
+        dir_chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        JButton dir_btn = new JButton("choose dir...");
+        dir_btn.addActionListener(e -> {
+            // File dirpath;
+            dir_chooser.showOpenDialog((Component)e.getSource());
+            // dirpath = dir_chooser.getSelectedFile();
+            // download_dir.setText(dirpath.getPath());
+            download_dir.setText((dir_chooser.getSelectedFile()).getPath());
+        });
+        gbc2.gridx = 4; 
+        gbc2.gridy = 2; 
+        gbc2.weightx = 0;
+        gbc2.gridwidth = 1;
+        audio_options.add(dir_btn,gbc2);
         // audio_panel.add(scroll_pane);
         // audio_panel.add(url_textfield);
 
