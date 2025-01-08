@@ -5,6 +5,7 @@ import java.io.File;
 import javax.swing.ImageIcon;
 import java.awt.Image;
 import java.util.Vector;
+import java.lang.StringBuilder;
 import javax.swing.JFileChooser;
 
 import java.awt.Color;
@@ -172,16 +173,26 @@ public class Main
 
                 @Override
                 public Integer doInBackground(){
+
+                    StringBuilder cmd = new StringBuilder("yt-dlp ");
+
+                    if(playlist_listbox.getSelectedIndex() == 0)
+                        cmd.append(" --yes-playlist ");
+                    else
+                        cmd.append(" --no-playlist ");
+
+                    if(thumbnail_listbox.getSelectedIndex() == 0)
+                        cmd.append(" --embed-thumbnail ");
+
+                    cmd.append(progress_opt_str);
+                    cmd.append(audio_opt_str + list_box.getSelectedItem());
+                    cmd.append(" --audio-quality 0 ");
+                    cmd.append(output_opt_str);
+                    cmd.append(url_textfield.getText());
                     
                     try{
 
-                        Process proc = 
-                            Runtime.getRuntime().exec("yt-dlp " + 
-                                                      progress_opt_str + 
-                                                      audio_opt_str + list_box.getSelectedItem() +
-                                                      " --audio-quality 0 " + 
-                                                      output_opt_str +
-                                                      url_textfield.getText() );
+                        Process proc = Runtime.getRuntime().exec(cmd.toString());
 
                         url_textfield.setText("");
                         InputStream input_stream = proc.getInputStream();
@@ -203,6 +214,9 @@ public class Main
                                 } else {
                                     table.setValueAt((int)Float.parseFloat(new String(line).substring(0,5)),rowcount-1,2);
                                 }
+                            }
+                            else if((char)c == 'D'){
+                                round = 0;
                             }
 
                             for(int i = 0; i < line.length; i++)
