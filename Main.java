@@ -217,7 +217,14 @@ public class Main
                             }
                             else if((char)c == 'D'){
                                 round = 0;
+                                table.setValueAt(1,rowcount-1,3);
+                                while((char)(c=input_stream.read()) != '\n')
+                                    line[x++] = (char)c;
+                            }else{
+                                while((char)(c=input_stream.read()) != '\n')
+                                    line[x++] = (char)c;
                             }
+
 
                             for(int i = 0; i < line.length; i++)
                                 line[i] = '\0';
