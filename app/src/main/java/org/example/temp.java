@@ -1,6 +1,3 @@
-// TODO
-// https://stackoverflow.com/questions/13753562/adding-progress-bar-to-each-table-cell-for-file-progress-java
-
 import java.io.File;
 import javax.swing.ImageIcon;
 import java.awt.Image;

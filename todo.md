@@ -1,8 +1,6 @@
 #TODO
 * elapsed time column
 
-* make this markdown
-
 #DONE
 * jfilechooser
 - https://docs.oracle.com/javase/8/docs/api/javax/swing/JFileChooser.html

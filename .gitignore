@@ -2,3 +2,12 @@
 *.swp
 *.mp3
 *.webm
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
+
+# test output dir
+mp3s
