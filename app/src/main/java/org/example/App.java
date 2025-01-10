@@ -4,11 +4,24 @@
 package org.example;
 
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
+
+    private MainWin main_win;
+
+    private static void initialization(){
+        // init application values
+    }
+
+    private static void createAndShowGUI(){
+        MainWin main_win = new MainWin();
+
+        createFrame(main_win);
+        createLayout(main_win);
+        populateWindow(main_win);
     }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        initialization();
+        createAndShowGUI();
     }
+
 }

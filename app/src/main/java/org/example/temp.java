@@ -52,7 +52,7 @@ import javax.swing.JMenu;
 import javax.swing.WindowConstants;
 import javax.swing.SwingConstants;
 
-public class Main 
+public class temp 
 {
     public static JTable table;
     public static DefaultTableModel table_model;
