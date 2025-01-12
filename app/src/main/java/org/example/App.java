@@ -5,23 +5,23 @@ package org.example;
 
 public class App {
 
-    private MainWin main_win;
+    // private MainWin main_win;
 
     private static void initialization(){
         // init application values
     }
 
-    private static void createAndShowGUI(){
-        MainWin main_win = new MainWin();
+    // private static void createAndShowGUI(){
+    //     MainWin main_win = new MainWin();
 
-        createFrame(main_win);
-        createLayout(main_win);
-        populateWindow(main_win);
-    }
+    //     createFrame(main_win);
+    //     createLayout(main_win);
+    //     populateWindow(main_win);
+    // }
 
-    public static void main(String[] args) {
-        initialization();
-        createAndShowGUI();
-    }
+    // public static void main(String[] args) {
+    //     initialization();
+    //     createAndShowGUI();
+    // }
 
 }
