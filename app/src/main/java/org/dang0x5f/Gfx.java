@@ -3,11 +3,16 @@ package org.dang0x5f;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
-public class AppGui
+public class Gfx
 {
     private JFrame frame;
 
-    public AppGui()
+    public Gfx()
+    {
+        createFrame();
+    }
+
+    private void createFrame()
     {
         frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
