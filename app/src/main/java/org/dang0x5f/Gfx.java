@@ -1,11 +1,14 @@
 package org.dang0x5f;
 
+import javax.swing.border.Border;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
+import java.awt.GridLayout;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.SwingConstants;
@@ -13,6 +16,7 @@ import javax.swing.JTabbedPane;
 
 public class Gfx
 {
+    private Border      border;
     private JFrame      frame;
 
     private JMenuBar    menu_bar;
@@ -22,8 +26,10 @@ public class Gfx
     private JMenu       about_menu;
 
     private JPanel        global_pane;
+    private JPanel        playlist_container;
     private JLabel        playlist_label;
     private JList<String> playlist_options;
+    private JPanel        thumbnail_container;
     private JLabel        thumbnail_label;
     private JList<String> thumbnail_options;
 
@@ -33,10 +39,16 @@ public class Gfx
 
     public Gfx()
     {
+        init();
         createFrame();
         createMenuBar();
         createGlobalPane();
         createTabPane();
+    }
+
+    private void init()
+    {
+        border = BorderFactory.createEtchedBorder();
     }
 
     private void createFrame()
@@ -78,6 +90,14 @@ public class Gfx
     {
         global_pane = new JPanel();
 
+        playlist_container  = new JPanel();
+        playlist_container.setBorder(border);
+        playlist_container.setLayout(new GridLayout(2,1));
+
+        thumbnail_container = new JPanel();
+        thumbnail_container.setBorder(border);
+        thumbnail_container.setLayout(new GridLayout(2,1));
+
         String options[] = {"include","exclude"};
 
         playlist_label    = new JLabel("playlist", SwingConstants.CENTER);
@@ -85,10 +105,13 @@ public class Gfx
         thumbnail_label   = new JLabel("thumbnail",SwingConstants.CENTER);
         thumbnail_options = new JList<String>(options);
 
-        global_pane.add(playlist_label);
-        global_pane.add(playlist_options);
-        global_pane.add(thumbnail_label);
-        global_pane.add(thumbnail_options);
+        playlist_container.add(playlist_label);
+        playlist_container.add(playlist_options);
+        thumbnail_container.add(thumbnail_label);
+        thumbnail_container.add(thumbnail_options);
+
+        global_pane.add(playlist_container);
+        global_pane.add(thumbnail_container);
 
         frame.add(global_pane,BorderLayout.WEST);
     }
