@@ -2,10 +2,14 @@ package org.dang0x5f;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
+import java.awt.BorderLayout;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
-import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.SwingConstants;
+import javax.swing.JTabbedPane;
 
 public class Gfx
 {
@@ -17,6 +21,12 @@ public class Gfx
     private JMenu       view_menu;
     private JMenu       about_menu;
 
+    private JPanel        global_pane;
+    private JLabel        playlist_label;
+    private JList<String> playlist_options;
+    private JLabel        thumbnail_label;
+    private JList<String> thumbnail_options;
+
     private JTabbedPane tab_pane;
     private JPanel      audio_tab;
     private JPanel      video_tab;
@@ -25,6 +35,7 @@ public class Gfx
     {
         createFrame();
         createMenuBar();
+        createGlobalPane();
         createTabPane();
     }
 
@@ -60,7 +71,26 @@ public class Gfx
         tab_pane.addTab("audio",audio_tab);
         tab_pane.addTab("video",video_tab);
 
-        frame.add(tab_pane);
+        frame.add(tab_pane,BorderLayout.CENTER);
+    }
+
+    private void createGlobalPane()
+    {
+        global_pane = new JPanel();
+
+        String options[] = {"include","exclude"};
+
+        playlist_label    = new JLabel("playlist", SwingConstants.CENTER);
+        playlist_options  = new JList<String>(options);
+        thumbnail_label   = new JLabel("thumbnail",SwingConstants.CENTER);
+        thumbnail_options = new JList<String>(options);
+
+        global_pane.add(playlist_label);
+        global_pane.add(playlist_options);
+        global_pane.add(thumbnail_label);
+        global_pane.add(thumbnail_options);
+
+        frame.add(global_pane,BorderLayout.WEST);
     }
 
     public void display()
