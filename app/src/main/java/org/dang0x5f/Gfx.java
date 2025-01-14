@@ -1,14 +1,17 @@
 package org.dang0x5f;
 
+import java.awt.Insets;
+import java.awt.GridLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.BorderLayout;
 import javax.swing.border.Border;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
-import java.awt.BorderLayout;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
-import java.awt.GridLayout;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.SwingConstants;
@@ -16,26 +19,27 @@ import javax.swing.JTabbedPane;
 
 public class Gfx
 {
-    private Border      border;
-    private JFrame      frame;
+    private JFrame             frame;
+    private Border             border;
+    private GridBagConstraints constraints;
 
-    private JMenuBar    menu_bar;
-    private JMenu       file_menu;
-    private JMenu       edit_menu;
-    private JMenu       view_menu;
-    private JMenu       about_menu;
+    private JMenuBar           menu_bar;
+    private JMenu              file_menu;
+    private JMenu              edit_menu;
+    private JMenu              view_menu;
+    private JMenu              about_menu;
 
-    private JPanel        global_pane;
-    private JPanel        playlist_container;
-    private JLabel        playlist_label;
-    private JList<String> playlist_options;
-    private JPanel        thumbnail_container;
-    private JLabel        thumbnail_label;
-    private JList<String> thumbnail_options;
+    private JPanel             global_pane;
+    private JPanel             playlist_container;
+    private JLabel             playlist_label;
+    private JList<String>      playlist_options;
+    private JPanel             thumbnail_container;
+    private JLabel             thumbnail_label;
+    private JList<String>      thumbnail_options;
 
-    private JTabbedPane tab_pane;
-    private JPanel      audio_tab;
-    private JPanel      video_tab;
+    private JTabbedPane        tab_pane;
+    private JPanel             audio_tab;
+    private JPanel             video_tab;
 
     public Gfx()
     {
@@ -49,6 +53,11 @@ public class Gfx
     private void init()
     {
         border = BorderFactory.createEtchedBorder();
+
+        constraints        = new GridBagConstraints();
+        constraints.fill   = GridBagConstraints.HORIZONTAL;
+        constraints.anchor = GridBagConstraints.PAGE_START;
+        constraints.insets = new Insets(10,3,5,3);
     }
 
     private void createFrame()
@@ -89,6 +98,7 @@ public class Gfx
     private void createGlobalPane()
     {
         global_pane = new JPanel();
+        global_pane.setLayout(new GridBagLayout());
 
         playlist_container  = new JPanel();
         playlist_container.setBorder(border);
@@ -110,8 +120,13 @@ public class Gfx
         thumbnail_container.add(thumbnail_label);
         thumbnail_container.add(thumbnail_options);
 
-        global_pane.add(playlist_container);
-        global_pane.add(thumbnail_container);
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        global_pane.add(playlist_container,constraints);
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        constraints.weighty = 1;
+        global_pane.add(thumbnail_container,constraints);
 
         frame.add(global_pane,BorderLayout.WEST);
     }
