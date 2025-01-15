@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.border.Border;
+// import javax.swing.border.EmptyBorder;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
@@ -146,7 +147,8 @@ public class Gfx
         url_field       = new JTextField(50);
         download_button = new JButton("submit");
 
-        download_dir = new JLabel(". . . . ."); /* change to default value */
+        download_dir = new JLabel(" . . . . . ."); /* change to default value */
+        download_dir.setBorder(border);
         chooser_dir  = new JFileChooser();
         chooser_dir.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser_button = new JButton("select destination");
@@ -155,13 +157,37 @@ public class Gfx
             download_dir.setText((chooser_dir.getSelectedFile()).getPath());
         });
 
+        constraints2.gridx     = 0;
+        constraints2.gridy     = 0;
+        audio_top.add(format_label,constraints2);
 
-        audio_top.add(format_label);
-        audio_top.add(format_list);
-        audio_top.add(url_field);
-        audio_top.add(download_button);
-        audio_top.add(download_dir);
-        audio_top.add(chooser_button);
+        constraints2.gridx     = 2;
+        constraints2.gridy     = 0;
+        audio_top.add(format_list,constraints2);
+
+        constraints2.gridx     = 0;
+        constraints2.gridy     = 1;
+        constraints2.weightx   = 1;
+        constraints2.gridwidth = 4;
+        audio_top.add(url_field,constraints2);
+
+        constraints2.gridx     = 4;
+        constraints2.gridy     = 1;
+        constraints2.weightx   = 0;
+        constraints2.gridwidth = 1;
+        audio_top.add(download_button,constraints2);
+
+        constraints2.gridx     = 0;
+        constraints2.gridy     = 2;
+        constraints2.weightx   = 1;
+        constraints2.gridwidth = 4;
+        audio_top.add(download_dir,constraints2);
+
+        constraints2.gridx     = 4;
+        constraints2.gridy     = 2;
+        constraints2.weightx   = 0;
+        constraints2.gridwidth = 1;
+        audio_top.add(chooser_button,constraints2);
     }
 
     private void populateAudioBot()
