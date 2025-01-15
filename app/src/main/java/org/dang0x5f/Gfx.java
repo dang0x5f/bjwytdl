@@ -2,7 +2,6 @@ package org.dang0x5f;
 
 import java.awt.Insets;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
@@ -163,6 +162,7 @@ public class Gfx
         url_field       = new JTextField(50);
         // url_field.setBorder(new EmptyBorder(5,5,5,5));
         download_button = new JButton("submit");
+        download_button.addActionListener(new DownloadActionThread());
 
         download_dir = new JLabel(" . . . . . ."); /* change to default value */
         download_dir.setBorder(border);
@@ -274,6 +274,7 @@ public class Gfx
 
     public void display()
     {
+        this.frame.pack();
         this.frame.setVisible(true);
     }
 }
