@@ -1,10 +1,11 @@
 package org.dang0x5f;
 
 import java.awt.Insets;
+import java.awt.Component;
 import java.awt.GridLayout;
+import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import java.awt.BorderLayout;
 import javax.swing.border.Border;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -16,12 +17,18 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.SwingConstants;
 import javax.swing.JTabbedPane;
+import javax.swing.JSplitPane;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 
 public class Gfx
 {
     private JFrame             frame;
     private Border             border;
     private GridBagConstraints constraints;
+    private GridBagConstraints constraints2;
 
     private JMenuBar           menu_bar;
     private JMenu              file_menu;
@@ -38,7 +45,16 @@ public class Gfx
     private JList<String>      thumbnail_options;
 
     private JTabbedPane        tab_pane;
-    private JPanel             audio_tab;
+    private JSplitPane         audio_tab;
+    private JPanel             audio_top;
+    private JLabel             format_label;
+    private JComboBox          format_list;
+    private JTextField         url_field;
+    private JButton            download_button;
+    private JLabel             download_dir;
+    private JFileChooser       chooser_dir;
+    private JButton            chooser_button;
+    private JPanel             audio_bot;
     private JPanel             video_tab;
 
     public Gfx()
@@ -54,10 +70,15 @@ public class Gfx
     {
         border = BorderFactory.createEtchedBorder();
 
-        constraints        = new GridBagConstraints();
-        constraints.fill   = GridBagConstraints.HORIZONTAL;
-        constraints.anchor = GridBagConstraints.PAGE_START;
-        constraints.insets = new Insets(10,3,5,3);
+        constraints         = new GridBagConstraints();
+        constraints.fill    = GridBagConstraints.HORIZONTAL;
+        constraints.anchor  = GridBagConstraints.PAGE_START;
+        constraints.insets  = new Insets(10,3,5,3);
+
+        constraints2        = new GridBagConstraints();
+        constraints2.fill   = GridBagConstraints.HORIZONTAL;
+        constraints2.anchor = GridBagConstraints.PAGE_START;
+        constraints2.insets = new Insets(5,5,5,5);
     }
 
     private void createFrame()
@@ -86,13 +107,71 @@ public class Gfx
     private void createTabPane()
     {
         tab_pane  = new JTabbedPane();
-        audio_tab = new JPanel();
-        video_tab = new JPanel();
+
+        createAudioPane();
+        createVideoPane();
 
         tab_pane.addTab("audio",audio_tab);
         tab_pane.addTab("video",video_tab);
 
         frame.add(tab_pane,BorderLayout.CENTER);
+    }
+
+    private void createAudioPane()
+    {
+        audio_top = new JPanel(new GridBagLayout());
+        populateAudioTop();
+        audio_bot = new JPanel();
+
+        audio_tab = new JSplitPane(JSplitPane.VERTICAL_SPLIT,audio_top,audio_bot);
+    }
+
+    private void populateAudioTop()
+    {
+        String audio_formats[] = {
+            "aac"
+           ,"alac"
+           ,"flac"
+           ,"m4a"
+           ,"mp3"
+           ,"opus"
+           ,"vorbis"
+           ,"wav"
+        };
+
+        format_label = new JLabel("audio format");
+        format_list  = new JComboBox<String>(audio_formats);
+        format_list.setSelectedIndex(4);
+
+        url_field       = new JTextField(50);
+        download_button = new JButton("submit");
+
+        download_dir = new JLabel(". . . . ."); /* change to default value */
+        chooser_dir  = new JFileChooser();
+        chooser_dir.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        chooser_button = new JButton("select destination");
+        chooser_button.addActionListener(e -> {
+            chooser_dir.showOpenDialog((Component)e.getSource());
+            download_dir.setText((chooser_dir.getSelectedFile()).getPath());
+        });
+
+
+        audio_top.add(format_label);
+        audio_top.add(format_list);
+        audio_top.add(url_field);
+        audio_top.add(download_button);
+        audio_top.add(download_dir);
+        audio_top.add(chooser_button);
+    }
+
+    private void populateAudioBot()
+    {
+
+    }
+    
+    private void createVideoPane()
+    {
+        video_tab = new JPanel();
     }
 
     private void createGlobalPane()
