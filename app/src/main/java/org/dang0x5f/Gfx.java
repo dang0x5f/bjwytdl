@@ -2,12 +2,13 @@ package org.dang0x5f;
 
 import java.awt.Insets;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.border.Border;
-// import javax.swing.border.EmptyBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
@@ -23,6 +24,11 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.DefaultTableModel;
 
 public class Gfx
 {
@@ -46,7 +52,9 @@ public class Gfx
     private JList<String>      thumbnail_options;
 
     private JTabbedPane        tab_pane;
+
     private JSplitPane         audio_tab;
+
     private JPanel             audio_top;
     private JLabel             format_label;
     private JComboBox          format_list;
@@ -55,7 +63,12 @@ public class Gfx
     private JLabel             download_dir;
     private JFileChooser       chooser_dir;
     private JButton            chooser_button;
+
     private JPanel             audio_bot;
+    private JTable             table;
+    private JScrollPane        table_scroll;
+    private DefaultTableModel  table_model;
+
     private JPanel             video_tab;
 
     public Gfx()
@@ -108,6 +121,7 @@ public class Gfx
     private void createTabPane()
     {
         tab_pane  = new JTabbedPane();
+        tab_pane.setBorder(new EmptyBorder(10,0,0,0));
 
         createAudioPane();
         createVideoPane();
@@ -121,8 +135,10 @@ public class Gfx
     private void createAudioPane()
     {
         audio_top = new JPanel(new GridBagLayout());
+        audio_top.setBorder(new EmptyBorder(5,10,5,10));
         populateAudioTop();
-        audio_bot = new JPanel();
+        audio_bot = new JPanel(new GridLayout());
+        populateAudioBot();
 
         audio_tab = new JSplitPane(JSplitPane.VERTICAL_SPLIT,audio_top,audio_bot);
     }
@@ -145,6 +161,7 @@ public class Gfx
         format_list.setSelectedIndex(4);
 
         url_field       = new JTextField(50);
+        // url_field.setBorder(new EmptyBorder(5,5,5,5));
         download_button = new JButton("submit");
 
         download_dir = new JLabel(" . . . . . ."); /* change to default value */
@@ -192,7 +209,26 @@ public class Gfx
 
     private void populateAudioBot()
     {
+        table_model = new DefaultTableModel()
+        {
+            @Override
+            public boolean isCellEditable(int a, int b) { return false; }
+        };
+        table_model.addColumn("name");
+        table_model.addColumn("format");
+        table_model.addColumn("progress");
+        table_model.addColumn("status");
+        
+        table = new JTable(table_model);
+        table.getColumnModel().getColumn(0).setPreferredWidth(100);
+        table.getColumnModel().getColumn(1).setPreferredWidth(30);
+        table.getColumnModel().getColumn(2).setPreferredWidth(100);
+        table.getColumnModel().getColumn(3).setPreferredWidth(100);
+        table.setShowGrid(true);
 
+        table_scroll = new JScrollPane(table);
+
+        audio_bot.add(table_scroll);
     }
     
     private void createVideoPane()
@@ -205,7 +241,7 @@ public class Gfx
         global_pane = new JPanel();
         global_pane.setLayout(new GridBagLayout());
 
-        playlist_container  = new JPanel();
+        playlist_container = new JPanel();
         playlist_container.setBorder(border);
         playlist_container.setLayout(new GridLayout(2,1));
 
@@ -225,11 +261,11 @@ public class Gfx
         thumbnail_container.add(thumbnail_label);
         thumbnail_container.add(thumbnail_options);
 
-        constraints.gridx = 0;
-        constraints.gridy = 0;
+        constraints.gridx   = 0;
+        constraints.gridy   = 0;
         global_pane.add(playlist_container,constraints);
-        constraints.gridx = 0;
-        constraints.gridy = 1;
+        constraints.gridx   = 0;
+        constraints.gridy   = 1;
         constraints.weighty = 1;
         global_pane.add(thumbnail_container,constraints);
 
