@@ -77,6 +77,13 @@ public class Gfx
         createMenuBar();
         createGlobalPane();
         createTabPane();
+
+        // DownloadActionThread dat = new DownloadActionThread(
+        //         table, table_model,
+        //         playlist_options, thumbnail_options,
+        //         format_list, url_field);
+        // download_button.addActionListener(dat);
+       download_button.addActionListener(new DownloadActionThread(this)); 
     }
 
     private void init()
@@ -162,7 +169,6 @@ public class Gfx
         url_field       = new JTextField(50);
         // url_field.setBorder(new EmptyBorder(5,5,5,5));
         download_button = new JButton("submit");
-        download_button.addActionListener(new DownloadActionThread());
 
         download_dir = new JLabel(" . . . . . ."); /* change to default value */
         download_dir.setBorder(border);
@@ -253,8 +259,10 @@ public class Gfx
 
         playlist_label    = new JLabel("playlist", SwingConstants.CENTER);
         playlist_options  = new JList<String>(options);
+        playlist_options.setSelectedIndex(1);
         thumbnail_label   = new JLabel("thumbnail",SwingConstants.CENTER);
         thumbnail_options = new JList<String>(options);
+        thumbnail_options.setSelectedIndex(1);
 
         playlist_container.add(playlist_label);
         playlist_container.add(playlist_options);
@@ -270,6 +278,52 @@ public class Gfx
         global_pane.add(thumbnail_container,constraints);
 
         frame.add(global_pane,BorderLayout.WEST);
+    }
+
+    public String getURL()
+    {
+        return url_field.getText();
+    }
+
+    public void setURL(String s)
+    {
+        url_field.setText(s);
+    }
+
+    public String getFormat()
+    {
+        return (String)format_list.getSelectedItem();
+    }
+
+    public int getPlaylistIndex()
+    {
+        return playlist_options.getSelectedIndex();
+    }
+    
+    public int getThumbnailIndex()
+    {
+        return thumbnail_options.getSelectedIndex();
+    }
+
+    public void addNewRow(Object[] row)
+    {
+        table_model.addRow(row);
+    }
+
+    public int getNumOfRows()
+    {
+        return table_model.getRowCount();
+    }
+
+    /* TODO: combine these */
+    public void setProgressBarValue(int value, int row, int col)
+    {
+        table.setValueAt(value,row,col);
+    }
+
+    public void setStatusValue(int value, int row, int col)
+    {
+        table.setValueAt(value, row, col);
     }
 
     public void display()
