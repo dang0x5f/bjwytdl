@@ -6,10 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.SwingWorker;
 
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
-
 public class DownloadActionThread implements ActionListener
 {
     private Gfx gfx;
@@ -58,6 +54,7 @@ public class DownloadActionThread implements ActionListener
                 command.append(audio_option);
                 command.append(gfx.getFormat());
                 command.append(output_option);
+                command.append(gfx.getPath());
                 command.append(output_parm);
                 command.append(gfx.getURL()); 
                 

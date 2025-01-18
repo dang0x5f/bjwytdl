@@ -1,5 +1,7 @@
 package org.dang0x5f;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.awt.Insets;
 import java.awt.Component;
 import java.awt.GridLayout;
@@ -315,7 +317,7 @@ public class Gfx
         return table_model.getRowCount();
     }
 
-    /* TODO: combine these */
+    /* TODO: combine these. . . .maybe */
     public void setProgressBarValue(int value, int row, int col)
     {
         table.setValueAt(value,row,col);
@@ -324,6 +326,15 @@ public class Gfx
     public void setStatusValue(int value, int row, int col)
     {
         table.setValueAt(value, row, col);
+    }
+
+    /* TODO: test on windows */
+    public String getPath()
+    {
+        if(Files.exists(Paths.get(download_dir.getText())))
+            return download_dir.getText() + '/';
+        else
+            return "";
     }
 
     public void display()
