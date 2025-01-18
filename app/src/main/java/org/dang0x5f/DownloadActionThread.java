@@ -35,11 +35,19 @@ public class DownloadActionThread implements ActionListener
     {
         SwingWorker worker_thread = new SwingWorker<Integer,Void>()
         {
+            private int status;
             private int rowcount;
 
             @Override
             public Integer doInBackground()
             {
+                status = 0;
+                if(gfx.getURL().isEmpty()){
+                    System.out.println("empty url");
+                    status = -1; 
+                    return(status);
+                }
+
                 StringBuilder command = new StringBuilder(bin);
                 
                 command.append(playlist_option [ gfx.getPlaylistIndex()  ]);
@@ -101,16 +109,19 @@ public class DownloadActionThread implements ActionListener
                     proc.waitFor();
                 }
                 catch(Exception ex){
-                    ex.printStackTrace();
+                    // ex.printStackTrace();
+                    status = -1;
                 }
 
-                return(0);
+                return(status);
             }
 
             @Override
             public void done(){
-                gfx.setProgressBarValue(100,rowcount-1,2);
-                gfx.setStatusValue(1,rowcount-1,3);
+                if(status == 0){
+                    gfx.setProgressBarValue(100,rowcount-1,2);
+                    gfx.setStatusValue(1,rowcount-1,3);
+                }
             }
 
         };
