@@ -80,12 +80,7 @@ public class Gfx
         createGlobalPane();
         createTabPane();
 
-        // DownloadActionThread dat = new DownloadActionThread(
-        //         table, table_model,
-        //         playlist_options, thumbnail_options,
-        //         format_list, url_field);
-        // download_button.addActionListener(dat);
-       download_button.addActionListener(new DownloadActionThread(this)); 
+        download_button.addActionListener(new DownloadActionThread(this)); 
     }
 
     private void init()
