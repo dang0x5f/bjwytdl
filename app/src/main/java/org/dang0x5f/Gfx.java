@@ -317,7 +317,16 @@ public class Gfx
         return table_model.getRowCount();
     }
 
-    /* TODO: combine these. . . .maybe */
+    public void setNameField(String name, int row, int col)
+    {
+        table.setValueAt(name,row,col);
+    }
+    
+    public void setFormatField(String format, int row, int col)
+    {
+        table.setValueAt(format,row,col);
+    }
+
     public void setProgressBarValue(int value, int row, int col)
     {
         table.setValueAt(value,row,col);
@@ -328,7 +337,7 @@ public class Gfx
         table.setValueAt(value, row, col);
     }
 
-    /* TODO: test on windows */
+    /* TODO: needs testing on windows */
     public String getPath()
     {
         if(Files.exists(Paths.get(download_dir.getText())))

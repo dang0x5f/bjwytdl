@@ -62,12 +62,17 @@ public class DownloadActionThread implements ActionListener
                 try{
                     Process proc = Runtime.getRuntime().exec(command.toString());
 
+                    rowcount = 0;
+                    Object[] row = { "loading..." ,"..." ,0 ,0 };
+                    gfx.addNewRow(row);                                
+                    rowcount = gfx.getNumOfRows();
+
                     gfx.setURL("");
                     InputStream i = proc.getInputStream();
 
-                    rowcount = 0;
                     char line[] = new char[256];
                     int c, x = 0, round = 0;
+                    boolean restart = false;
                     while((c=i.read()) != -1){
                         // System.out.print((char)c);
                         if((char)c == '>'){
@@ -75,11 +80,17 @@ public class DownloadActionThread implements ActionListener
                                 line[x++] = (char)c;
                             
                             if(round < 1){
-                                Object[] row = { 
-                                    new String(line).substring(6)
-                                   ,gfx.getFormat() ,0 ,0 };
-                                gfx.addNewRow(row);                                
-                                rowcount = gfx.getNumOfRows();
+                                if(restart){
+                                    Object[] new_row = { 
+                                        new String(line).substring(6)
+                                       ,gfx.getFormat() ,0 ,0 };
+                                    gfx.addNewRow(new_row);                                
+                                    rowcount = gfx.getNumOfRows();
+                                    restart = false;
+                                } else {
+                                    gfx.setNameField(new String(line).substring(6),rowcount-1,0);
+                                    gfx.setFormatField(gfx.getFormat(),rowcount-1,1);
+                                }
                                 round++;
                             } else {
                                 gfx.setProgressBarValue(
@@ -88,6 +99,7 @@ public class DownloadActionThread implements ActionListener
                             }
                         } else if((char)c == 'D') {
                             round = 0;
+                            restart = true;
                             gfx.setStatusValue(1,rowcount-1,3);
                             while((char)(c=i.read()) != '\n')
                                 line[x++] = (char)c;
