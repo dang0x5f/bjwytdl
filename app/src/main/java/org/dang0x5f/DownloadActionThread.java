@@ -33,6 +33,7 @@ public class DownloadActionThread implements ActionListener
     {
         SwingWorker worker_thread = new SwingWorker<Integer,Void>()
         {
+            private int count;
             private int status;
             private int rowcount;
             private long id;
@@ -67,8 +68,9 @@ public class DownloadActionThread implements ActionListener
                 try{
                     Process proc = Runtime.getRuntime().exec(command.toString());
 
+                    count = 1;
                     rowcount = 0;
-                    Object[] row = { "loading..." ,"..." ,0 , 0, id };
+                    Object[] row = { "loading..." ,"..." ,0 , 0, id, count };
                     gfx.addNewRow(row);                                
                     rowcount = gfx.getNumOfRows();
 
@@ -109,7 +111,8 @@ public class DownloadActionThread implements ActionListener
                                 line[x++] = (char)c;
 
                             if( (new String(line).substring(9,16)).equals("Extract") ){
-                                Object[] newrow = { "loading..." ,"..." ,0 ,0 ,id };
+                                count++;
+                                Object[] newrow = { "loading..." ,"..." ,0 ,0 ,id, count };
                                 gfx.addNewRow(newrow);                                
                                 rowcount = gfx.getNumOfRows();
                                 restart = false;
