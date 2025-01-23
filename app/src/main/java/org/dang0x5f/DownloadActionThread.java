@@ -35,10 +35,13 @@ public class DownloadActionThread implements ActionListener
         {
             private int status;
             private int rowcount;
+            private long id;
 
             @Override
             public Integer doInBackground()
             {
+                id = Thread.currentThread().getId();
+
                 status = 0;
                 if(gfx.getURL().isEmpty()){
                     System.out.println("empty url");
@@ -65,7 +68,7 @@ public class DownloadActionThread implements ActionListener
                     Process proc = Runtime.getRuntime().exec(command.toString());
 
                     rowcount = 0;
-                    Object[] row = { "loading..." ,"..." ,0 ,0 };
+                    Object[] row = { "loading..." ,"..." ,0 , 0, id };
                     gfx.addNewRow(row);                                
                     rowcount = gfx.getNumOfRows();
 
@@ -106,7 +109,7 @@ public class DownloadActionThread implements ActionListener
                                 line[x++] = (char)c;
 
                             if( (new String(line).substring(9,16)).equals("Extract") ){
-                                Object[] newrow = { "loading..." ,"..." ,0 ,0 };
+                                Object[] newrow = { "loading..." ,"..." ,0 ,0 ,id };
                                 gfx.addNewRow(newrow);                                
                                 rowcount = gfx.getNumOfRows();
                                 restart = false;

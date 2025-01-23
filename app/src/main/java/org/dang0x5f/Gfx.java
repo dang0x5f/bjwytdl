@@ -221,12 +221,14 @@ public class Gfx
         table_model.addColumn("format");
         table_model.addColumn("progress");
         table_model.addColumn("status");
+        table_model.addColumn("pid");
         
         table = new JTable(table_model);
         table.getColumnModel().getColumn(0).setPreferredWidth(100);
-        table.getColumnModel().getColumn(1).setPreferredWidth(30);
+        table.getColumnModel().getColumn(1).setPreferredWidth(25);
         table.getColumnModel().getColumn(2).setPreferredWidth(100);
         table.getColumnModel().getColumn(3).setPreferredWidth(100);
+        table.getColumnModel().getColumn(4).setPreferredWidth(25);
         table.setShowGrid(true);
 
         table_scroll = new JScrollPane(table);
