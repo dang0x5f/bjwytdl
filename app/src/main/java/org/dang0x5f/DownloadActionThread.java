@@ -6,13 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.SwingWorker;
 
-/* TODO add pid and possible playlist number to download */
-
 public class DownloadActionThread implements ActionListener
 {
     private Gfx gfx;
 
     private String bin                = "yt-dlp";
+    private String winbin		      = "yt-dlp.exe";
     private String newline_option     = " --newline";
     private String progress_option    = " --progress-template ";
     private String progress_parm      = ">%(progress._percent_str)s%(info.title)s";
@@ -41,6 +40,7 @@ public class DownloadActionThread implements ActionListener
             @Override
             public Integer doInBackground()
             {
+            	StringBuilder command;
                 id = Thread.currentThread().getId();
 
                 status = 0;
@@ -49,8 +49,13 @@ public class DownloadActionThread implements ActionListener
                     status = -1; 
                     return(status);
                 }
-
-                StringBuilder command = new StringBuilder(bin);
+                
+                if(gfx.getOS().equals("Windows 10")) {
+                	command = new StringBuilder(gfx.getHome() + "\\Downloads\\" + winbin);
+                	command.append(" --ffmpeg-location C:\\Users\\danny\\Downloads\\ffmpeg-2024-12-11-git-a518b5540d-full_build\\ffmpeg-2024-12-11-git-a518b5540d-full_build\\bin\\ ");
+                }else {
+					command = new StringBuilder(bin);
+                }
                 
                 command.append(playlist_option [ gfx.getPlaylistIndex()  ]);
                 command.append(thumbnail_option[ gfx.getThumbnailIndex() ]);
@@ -64,6 +69,7 @@ public class DownloadActionThread implements ActionListener
                 command.append(output_parm);
                 command.append(gfx.getURL()); 
                 
+                	System.out.println(command);
 
                 try{
                     Process proc = Runtime.getRuntime().exec(command.toString());

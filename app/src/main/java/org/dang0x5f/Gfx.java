@@ -33,6 +33,8 @@ import javax.swing.table.DefaultTableModel;
 
 public class Gfx
 {
+	private App 			   app;
+	
     private JFrame             frame;
     private Border             border;
     private GridBagConstraints constraints;
@@ -72,8 +74,10 @@ public class Gfx
 
     private JPanel             video_tab;
 
-    public Gfx()
+    public Gfx(App _app)
     {
+    	app = _app;
+    	
         init();
         createFrame();
         createMenuBar();
@@ -340,7 +344,10 @@ public class Gfx
     public String getPath()
     {
         if(Files.exists(Paths.get(download_dir.getText())))
-            return download_dir.getText() + '/';
+        	if(getOS().equals("Windows 10"))
+        		return download_dir.getText() + '\\';
+        	else
+				return download_dir.getText() + '/';
         else
             return "";
     }
@@ -349,5 +356,25 @@ public class Gfx
     {
         this.frame.pack();
         this.frame.setVisible(true);
+    }
+
+    public String getOS()
+    {
+    	return app.getOS();
+    }
+    
+    public String getUsername()
+    {
+    	return app.getUsername();
+    }
+    
+    public String getHome()
+    {
+    	return app.getHome();
+    }
+
+    public String getPWD()
+    {
+    	return app.getPWD();
     }
 }
